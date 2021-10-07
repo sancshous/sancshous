@@ -1,0 +1,54 @@
+Первое задание к сожалению не решено, т.к. у меня нет опыта фронт разработки. Я попытался нагуглить, 
+чтобы понять что вообще от меня требуется и как это выглядит, но результаты поиска выдают ответы 
+использовать клиентские библиотеки по работе с формами, а ТЗ это запрещено использовать.
+
+Задание №2. Анализ кода
+Предположим что массивы заранее отсортированы(иначе нельзя использовать данный алгоритм). 
+Рекурсивный алгоритм бинарного поиска индекса в заданном диапазоне массива, который возвращает индекс элемента, имеющего ключ key. 
+Если ключ меньше ключа элемента массива с индексом low, возвращает low, если больше ключа элемента с индексом high то возвращает high.
+static int Func1(KeyValuePair<int, string>[] a, int low, int high, int key)
+{
+  int middle = low + ((high - low)/2);
+ 
+  if (low == high)
+    return low;
+ 
+  if (key > a[middle].Key)
+    return Func1(a, middle + 1, high, key);
+ 
+  return Func1(a, low, middle, key);
+}
+     
+Увеличивает размер массива на 1 и вставляет в него новую пару значений типа 
+<Число, Строка>. Позиция вставки определяется функцией Func1. 
+Перед вставкой нового элемента происходит циклическое копирование элементов вправо, начиная от позиции вставки и до конца массива.
+ 
+
+static void Func2(ref KeyValuePair<int, string>[] a, int key, string value)
+{
+  int pos;
+  KeyValuePair<int, string> keyValuePair;
+ 
+  if (a.Length == 0)
+  {
+    Array.Resize(ref a, 1);
+    keyValuePair = new KeyValuePair<int, string>(key, value);
+    a[0] = keyValuePair;
+    return;
+  }
+ 
+  if (key < a[0].Key)
+    pos = 0;
+  else if (key > a[a.Length - 1].Key)
+    pos = a.Length;
+  else
+    pos = Func1(a, 0, a.Length - 1, key);
+ 
+  Array.Resize(ref a, a.Length + 1);
+  for (int i = a.Length - 1; i > pos; i--)
+    a[i] = a[i - 1];
+ 
+  keyValuePair = new KeyValuePair<int, string>(key, value);
+  a[pos] = keyValuePair;
+}
+
